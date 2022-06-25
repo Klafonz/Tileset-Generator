@@ -1,6 +1,6 @@
 # Minecraft Wireless Redstone Tileset Generator
 
-**Warning: Repeater lengths greater than 8 will take a *long* time to calculate the tileset**
+**!!! Warning: Repeater lengths greater than 8 will take a *long* time to calculate the tileset or may crash the program !!!**
 
 How to download and run:
 1. Click the green "Code" dropdown
