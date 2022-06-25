@@ -1,4 +1,4 @@
-from ast import arg, operator
+from ast import operator
 import argparse
 from collections import defaultdict
 import itertools
@@ -7,6 +7,8 @@ import time
 import sys
 import os
 from xmlrpc.client import MININT
+import multiprocessing
+import psutil
 
 def clear_console():
     os.system('clear') if os.name == 'posix' else os.system('CLS')
@@ -207,13 +209,21 @@ def parse_args():
     args = parser.parse_args()
     return args
 
+def permutation(perm):
+    return perm
+
+def limit_cpu():
+    p = psutil.Process(os.getpid())
+    p.nice(psutil.BELOW_NORMAL_PRIORITY_CLASS)
+
 def main():
     args = parse_args()
     (repeater_chain_length, outfile) = get_input()
     if outfile:
         args.output = f"{outfile}.txt"
     repeater_list = generate_repeater_list(repeater_chain_length)
-    permutations = list(itertools.permutations(repeater_list, repeater_chain_length))
+    with multiprocessing.Pool(multiprocessing.cpu_count() - 1, limit_cpu) as p:
+        permutations = p.map(permutation, itertools.permutations(repeater_list, r=repeater_chain_length))
     ordered_permutations = calculate_order(permutations, repeater_chain_length)
     display_repeaters(ordered_permutations, args)
     input("Press any key to continue...")
